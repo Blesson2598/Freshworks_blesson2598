@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">	
 	<title>MovieWiki</title>
 	<style type="text/css">
 		body{
@@ -11,7 +12,7 @@
 			display: inline;
   			color: white;
   			font-size: 1.5cm;
-			  	
+
 		}
 #search
 	{
@@ -41,7 +42,7 @@ input[type=text]:focus {
 			<center>
 	<input type="text" id="search" placeholder="Search For Movies" onkeyup="search()">
 				<br><br>
-	<div id="results" style="color: white;"></div>
+	<div id="results" class="container" style="color: white;"></div>
 </center>
 </body>
 <script type="text/javascript">
@@ -58,19 +59,100 @@ input[type=text]:focus {
 		  .then(response => response.json())
 		  .then((data) => {
 			  
-		  let output='';
-		   
-		  	data.Search.forEach(function(post){
-				  
+		  let output='<div class="row">'
+			let counter=0,c=0,flag=0;
+
+			
+			for(let i = 0 ; i <data.Search.length;i++)
+			{
+		  		c++;
+
 		 output += `
-            <ul >
-            <a href="https://www.imdb.com/title/${post.imdbID}">
-              <li ><img src="${post.Poster}"></li>
-              <li><h3 style="color:white;">${post.Title}</h3></li>
+		 <div class="col-lg-4">
+            
+            <a href="https://www.imdb.com/title/${data.Search[i].imdbID}">
+              <img src="${data.Search[i].Poster}">
+              <h3 style="color:white;">${data.Search[i].Title}</h3>
               </a>
-            </ul>
+            
+			</div>
           `;
-		  	});
+		  if(c==7)
+		  {
+			   flag=1;
+			  break;
+		  }
+		  if(counter<2)
+				  {
+					  counter++;
+				  }
+				  else
+				  {
+					  output+='</div><div class="row">';
+						counter=0;
+				  }
+		  	}
+			  
+			  output+='</div>';
+			  if(flag==1)
+			  {
+				  output+='<center><button class="btn btn-success"value="Show more" onclick="show()">Show more</button><div>'
+			  }
+
+		      document.getElementById('results').innerHTML = output;
+		  });
+	}
+	function show()
+	{
+		
+		document.body.style.backgroundColor = "black";
+		
+
+		let input = document.getElementById('search').value;
+
+		
+		console.log(input);
+		fetch("https://www.omdbapi.com/?s="+input+"&apikey=ba1f4581")
+		  .then(response => response.json())
+		  .then((data) => {
+			  
+		  let output='<div class="row">'
+			let counter=0,c=0,flag=0;
+
+			
+			for(let i = 7 ; i <data.Search.length;i++)
+			{
+		  		
+
+		 output += `
+		 <div class="col-lg-4">
+            
+            <a href="https://www.imdb.com/title/${data.Search[i].imdbID}">
+              <img src="${data.Search[i].Poster}">
+              <h3 style="color:white;">${data.Search[i].Title}</h3>
+              </a>
+            
+			</div>
+          `;
+		  if(c==7)
+		  {
+			   
+			  break;
+		  }
+		  if(counter<2)
+				  {
+					  counter++;
+				  }
+				  else
+				  {
+					  output+='</div><div class="row">';
+						counter=0;
+				  }
+		  	}
+			  
+			  output+='</div>';
+			  
+
 		      document.getElementById('results').innerHTML = output;
 		  });
 	}

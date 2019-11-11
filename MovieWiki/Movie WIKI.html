@@ -7,12 +7,14 @@
 		body{
 				background-color: rgb(106, 151, 222);
 		}
-		ul li{
-			list-style: none;
-			display: inline;
-  			color: white;
-  			font-size: 1.5cm;
-
+		#name
+		{
+			font-size: 1.5cm;
+			color: white;
+		}
+		#content
+		{
+			padding-top: 18%;
 		}
 #search
 	{
@@ -20,61 +22,42 @@
   height: 30px;
   width: 15cm;
 	}	
-		input[type=text] {
-    padding:5px; 
-    border:2px solid #ccc; 
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-}
-input[type=text]:focus {
-    border-color:#333;
-}
 </style>
 </head>
 
 <body>
-		<br><br><br><br><br><br><br><br>
 		<center>
-				<ul>
-					<li id="t1">Movie</li>
-					<li id="t2"><b>Wiki</b></li>
-				</ul><br>
-			<center>
-	<input type="text" id="search" placeholder="Search For Movies" onkeyup="search()">
-				<br><br>
+			<div id="content">
+			<h1 id="name">Movie<b>Wiki</b></h1><br>
+	<input type="text" class="form-control" id="search" placeholder="Search For Movies" onkeyup="search()"><br><br>
 	<div id="results" class="container" style="color: white;"></div>
+</div>
 </center>
 </body>
 <script type="text/javascript">
 	function search()
 	{
 		document.body.style.backgroundColor = "black";
-		
-
+		document.getElementById("content").style.paddingTop = "0%";
 		let input = document.getElementById('search').value;
-
 		
 		console.log(input);
-		fetch("https://www.omdbapi.com/?s="+input+"&apikey=ba1f4581")
+		fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=871c4c3d&s=${input}`)
 		  .then(response => response.json())
 		  .then((data) => {
-			  console.log(data.Search[0]);
+			  
 		  let output='<div class="row">'
 			let counter=0,c=0,flag=0;
-
 			
 			for(let i = 0 ; i <data.Search.length;i++)
 			{
 		  		c++;
-
 		 output += `
-		 <div class="col-lg-4">
-            
-            <a href="https://www.imdb.com/title/${data.Search[i].imdbID}">
+		 <div class="col-lg-4">         
+          <a href="https://www.imdb.com/title/${data.Search[i].imdbID}" onclick="update()">
               <img src="${data.Search[i].Poster}">
               <h3 style="color:white;">${data.Search[i].Title}</h3>
-              </a>
-            
+              </a>           
 			</div>
           `;
 		  if(c==6)
@@ -96,9 +79,8 @@ input[type=text]:focus {
 			  output+='</div>';
 			  if(flag==1)
 			  {
-				  output+='<center><button class="btn btn-success"value="Show more" onclick="show()">Show more</button><div>'
+				  output+='<center><button class="btn btn-success" value="Show more" onclick="show()">Show more</button><div><br>'
 			  }
-
 		      document.getElementById('results').innerHTML = output;
 		  });
 	}
@@ -107,38 +89,29 @@ input[type=text]:focus {
 		
 		document.body.style.backgroundColor = "black";
 		
-
 		let input = document.getElementById('search').value;
-
 		
 		console.log(input);
-		fetch("https://www.omdbapi.com/?s="+input+"&apikey=ba1f4581")
+		fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=871c4c3d&s=${input}`)
 		  .then(response => response.json())
 		  .then((data) => {
 			  
 		  let output='<div class="row">'
 			let counter=0,c=0,flag=0;
-
 			
-			for(let i = 7 ; i <data.Search.length;i++)
+			for(let i = 0 ; i <data.Search.length;i++)
 			{
 		  		
-
 		 output += `
 		 <div class="col-lg-4">
             
-            <a href="https://www.imdb.com/title/${data.Search[i].imdbID}">
+            <a href="https://www.imdb.com/title/${data.Search[i].imdbID}" onclick="update()">
               <img src="${data.Search[i].Poster}">
               <h3 style="color:white;">${data.Search[i].Title}</h3>
               </a>
             
 			</div>
           `;
-		  if(c==7)
-		  {
-			   
-			  break;
-		  }
 		  if(counter<2)
 				  {
 					  counter++;
@@ -151,10 +124,13 @@ input[type=text]:focus {
 		  	}
 			  
 			  output+='</div>';
-			  
-
+			   output+='<center><button class="btn btn-danger" value="Show Less" onclick="search()">Show less</button><div><br>'
 		      document.getElementById('results').innerHTML = output;
 		  });
+	}
+	function update()
+	{
+		document.getElementById('search').value = '';
 	}
 </script>
 </html>
